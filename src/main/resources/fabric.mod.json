@@ -3,13 +3,12 @@
 	"id": "gakujelly",
 	"version": "${version}",
 	"name": "Gakujelly",
-	"description": "Gakusei's stuff for the JD SMP. So far, includes:\n - Guts",
+	"description": "Gakusei's stuff for the JD SMP. So far, includes:\n - Guts\n - Vulnerability",
 	"authors": [
 		"GakuseiXIV"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/GakuseiXIV/Gakujelli/"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/gakujelly/icon.png",
