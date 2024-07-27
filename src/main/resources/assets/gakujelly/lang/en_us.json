@@ -1,0 +1,18 @@
+{
+  "effect.gakujelly.guts": "Guts",
+  "item.minecraft.potion.effect.guts_potion": "Potion of Guts",
+  "item.minecraft.splash_potion.effect.guts_potion": "Splash Potion of Guts",
+  "item.minecraft.lingering_potion.effect.guts_potion": "Lingering Potion of Guts",
+
+  "effect.gakujelly.vulnerability": "Vulnerability",
+  "item.minecraft.potion.effect.vuln_potion": "Potion of Vulnerability",
+  "item.minecraft.splash_potion.effect.vuln_potion": "Splash Potion of Vulnerability",
+  "item.minecraft.lingering_potion.effect.vuln_potion": "Lingering Potion of Vulnerability",
+
+  "gakujelly.midnightconfig.title":"Gakujelly!",
+  "gakujelly.midnightconfig.gutsSec": "Guts",
+  "gakujelly.midnightconfig.enableGuts" : "Enable Guts",
+  "gakujelly.midnightconfig.defaultPlayerGuts" : "Default Player Guts Ranking",
+  "gakujelly.midnightconfig.defaultMobGuts" : "Default Mob Guts Ranking",
+  "gakujelly.midnightconfig.minimumDamage" : "Minimum Damage"
+}

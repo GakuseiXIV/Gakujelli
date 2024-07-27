@@ -1,0 +1,30 @@
+{
+	"schemaVersion": 1,
+	"id": "gakujelly",
+	"version": "${version}",
+	"name": "Gakujelly",
+	"description": "Gakusei's stuff for the JD SMP. So far, includes:\n - Guts",
+	"authors": [
+		"GakuseiXIV"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/gakujelly/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"gakusei.gakujelly.Gakujelly"
+		]
+	},
+	"mixins": [
+		"gakujelly.mixins.json"
+	],
+	"depends": {
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	}
+}

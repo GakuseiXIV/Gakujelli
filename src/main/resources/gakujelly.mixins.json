@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "gakusei.gakujelly.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+      "GutsMixin",
+		"BrewingRecipeRegistryMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
