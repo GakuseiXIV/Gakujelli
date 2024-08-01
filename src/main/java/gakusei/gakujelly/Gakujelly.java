@@ -4,6 +4,8 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import gakusei.gakujelly.effect.Guts;
 import gakusei.gakujelly.effect.Vulnerability;
 import gakusei.gakujelly.mixin.BrewingRecipeRegistryMixin;
+import gakusei.gakujelly.networking.Kakapo;
+import gakusei.gakujelly.screen.PerkTreeScreen;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.effect.StatusEffect;
@@ -21,7 +23,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Gakujelly implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("gakujelly");
@@ -58,8 +64,11 @@ public class Gakujelly implements ModInitializer {
 			new Identifier(ID, "strong_vuln_potion"),
 			new Potion("vuln_potion", new StatusEffectInstance(VULN, 2400, 1)));
 
+	public static PerkTreeScreen.Perk[] Perks;
+
 	@Override
 	public void onInitialize() {
+		Kakapo.RegisterS2CPackets();
 		MidnightConfig.init(ID, ModConfig.class);
 
 		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(Potions.THICK, Items.RAW_GOLD, GUTS_POT);
@@ -70,5 +79,27 @@ public class Gakujelly implements ModInitializer {
 		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(Potions.MUNDANE, Items.RAW_COPPER, VULN_POT);
 		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(VULN_POT, Items.REDSTONE, VULN_POT_EXT);
 		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(VULN_POT, Items.GLOWSTONE_DUST, VULN_POT_STR);
+
+		try {
+			List<PerkTreeScreen.Perk> p = new ArrayList<>();
+			for (String s : ModConfig.perkDirectories)
+			{
+				p.addAll(Arrays.stream(PerkTreeScreen.Perk.loadPerksFromFile("/data/" + s + "/perks.json")).toList());
+			}
+			Perks = p.toArray(PerkTreeScreen.Perk[]::new);
+		} catch (IOException e) {
+			Gakujelly.Log("failed to load perks");
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void Log(String message)
+	{
+		LOGGER.info(message);
+	}
+
+	public static PerkTreeScreen.Perk[] GetPerks()
+	{
+		return Perks;
 	}
 }

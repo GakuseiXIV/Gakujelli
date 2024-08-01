@@ -1,0 +1,26 @@
+[
+  {
+    "name": "archer",
+    "ring": 1,
+    "prerequisites": [],
+    "cost": 1
+  },
+  {
+    "name": "swordsman",
+    "ring": 1,
+    "prerequisites": [],
+    "cost": 1
+  },
+  {
+    "name": "griffin",
+    "ring": 1,
+    "prerequisites": [],
+    "cost": 1
+  },
+  {
+    "name": "nocturnal",
+    "ring": 1,
+    "prerequisites": [],
+    "cost": 1
+  }
+]
