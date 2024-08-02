@@ -22,5 +22,11 @@
     "ring": 1,
     "prerequisites": [],
     "cost": 1
+  },
+  {
+    "name": "venture",
+    "ring": 2,
+    "prerequisites": ["griffin", "nocturnal"],
+    "cost": 1
   }
 ]

@@ -1,4 +1,4 @@
-package gakusei.gakujelly;
+package gakusei.gakujelli;
 
 import eu.midnightdust.lib.config.MidnightConfig;
 
@@ -15,5 +15,5 @@ public class ModConfig extends MidnightConfig {
     @Comment(category = "text", centered = true) public static Comment perksSec;
     @Comment(category = "text") public static Comment perksDisclaimer;
     @Entry(category = "text") public static boolean enablePerks = false;
-    @Entry(category = "text") public static List<String> perkDirectories = Lists.newArrayList("gakujelly");
+    @Entry(category = "text") public static List<String> perkDirectories = Lists.newArrayList("gakujelli");
 }

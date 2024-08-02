@@ -1,11 +1,10 @@
-package gakusei.gakujelly;
+package gakusei.gakujelli;
 
 import eu.midnightdust.lib.config.MidnightConfig;
-import gakusei.gakujelly.effect.Guts;
-import gakusei.gakujelly.effect.Vulnerability;
-import gakusei.gakujelly.mixin.BrewingRecipeRegistryMixin;
-import gakusei.gakujelly.networking.Kakapo;
-import gakusei.gakujelly.screen.PerkTreeScreen;
+import gakusei.gakujelli.effect.Guts;
+import gakusei.gakujelli.mixin.BrewingRecipeRegistryMixin;
+import gakusei.gakujelli.networking.Kakapo;
+import gakusei.gakujelli.screen.PerkTreeScreen;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.entity.effect.StatusEffect;
@@ -14,24 +13,20 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
-import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Gakujelly implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("gakujelly");
-	public static String ID = "gakujelly";
+public class Gakujelli implements ModInitializer {
+    public static final Logger LOGGER = LoggerFactory.getLogger("gakujelli");
+	public static String ID = "gakujelli";
 
 	public static final StatusEffect VULN = Registry.register(Registries.STATUS_EFFECT,
 			new Identifier(ID, "vulnerability"),
@@ -88,7 +83,7 @@ public class Gakujelly implements ModInitializer {
 			}
 			Perks = p.toArray(PerkTreeScreen.Perk[]::new);
 		} catch (IOException e) {
-			Gakujelly.Log("failed to load perks");
+			Gakujelli.Log("failed to load perks");
 			throw new RuntimeException(e);
 		}
 	}

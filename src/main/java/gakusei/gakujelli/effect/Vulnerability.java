@@ -1,4 +1,4 @@
-package gakusei.gakujelly.effect;
+package gakusei.gakujelli.effect;
 
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;

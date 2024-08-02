@@ -1,4 +1,4 @@
-package gakusei.gakujelly.mixin;
+package gakusei.gakujelli.mixin;
 
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;

@@ -1,0 +1,41 @@
+{
+  "effect.gakujelli.guts": "Guts",
+  "item.minecraft.potion.effect.guts_potion": "Potion of Guts",
+  "item.minecraft.splash_potion.effect.guts_potion": "Splash Potion of Guts",
+  "item.minecraft.lingering_potion.effect.guts_potion": "Lingering Potion of Guts",
+
+  "effect.gakujelli.vulnerability": "Vulnerability",
+  "item.minecraft.potion.effect.vuln_potion": "Potion of Vulnerability",
+  "item.minecraft.splash_potion.effect.vuln_potion": "Splash Potion of Vulnerability",
+  "item.minecraft.lingering_potion.effect.vuln_potion": "Lingering Potion of Vulnerability",
+
+  "gakujelli.midnightconfig.title":"gakujelli!",
+  "gakujelli.midnightconfig.gutsSec": "Guts",
+  "gakujelli.midnightconfig.enableGuts" : "Enable Guts",
+  "gakujelli.midnightconfig.defaultPlayerGuts" : "Default Player Guts Ranking",
+  "gakujelli.midnightconfig.defaultMobGuts" : "Default Mob Guts Ranking",
+  "gakujelli.midnightconfig.minimumDamage" : "Minimum Damage",
+  "gakujelli.midnightconfig.perksSec": "Perks",
+  "gakujelli.midnightconfig.perksDisclaimer": "Perks do not work right now. They do not do anything yet. Leaving them disabled is for the better.",
+  "gakujelli.midnightconfig.enablePerks": "Enable Perks (not recommended)",
+  "gakujelli.midnightconfig.perkDirectories": "Perk directories",
+
+  "key.gakujelli.open_perk_tree": "Open Perk Tree",
+  "category.gakujelli.gakujelli.": "gakujelli",
+
+  "perks.gakujelli.requires": "Requires",
+  "perks.gakujelli.costs": "Costs",
+
+  "perk.gakujelli.tank": "Tank",
+  "perk.tooltip.gakujelli.tank": "Increases Guts by 1.",
+  "perk.gakujelli.archer": "Archer",
+  "perk.tooltip.gakujelli.archer": "Increases bow draw speed.",
+  "perk.gakujelli.swordsman": "Swordsman",
+  "perk.tooltip.gakujelli.swordsman": "Increases sword swing speed.",
+  "perk.gakujelli.nocturnal": "Nocturnal",
+  "perk.tooltip.gakujelli.nocturnal": "Grants Night Vision at night time",
+  "perk.gakujelli.griffin": "Griffin",
+  "perk.tooltip.gakujelli.griffin": "Exists",
+  "perk.gakujelli.venture": "Venture",
+  "perk.tooltip.gakujelli.venture": "Exists"
+}

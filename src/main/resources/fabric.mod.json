@@ -11,18 +11,21 @@
 		"sources": "https://github.com/GakuseiXIV/Gakujelli/"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/gakujelly/icon.png",
+	"icon": "assets/gakujelli/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"gakusei.gakujelly.Gakujelly"
+          "gakusei.gakujelli.Gakujelli"
 		],
 		"client": [
-			"gakusei.gakujelly.GakujellyClient"
+			"gakusei.gakujelli.GakujelliClient"
+		],
+		"cardinal-components": [
+			"gakusei.gakujelli.GakuComponents"
 		]
 	},
 	"mixins": [
-		"gakujelly.mixins.json"
+		"gakujelli.mixins.json"
 	],
 	"depends": {
 		"minecraft": "~1.20.1",
@@ -32,7 +35,7 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"gakujelly:perks"
+			"gakujelli:perks"
 		]
 	}
 }

@@ -1,12 +1,13 @@
-package gakusei.gakujelly.component;
+package gakusei.gakujelli.component;
 
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import gakusei.gakujelly.GakuComponents;
-import gakusei.gakujelly.Gakujelly;
-import gakusei.gakujelly.util.JFunc;
+import gakusei.gakujelli.GakuComponents;
+import gakusei.gakujelli.Gakujelli;
+import gakusei.gakujelli.util.JFunc;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent {
@@ -52,8 +53,8 @@ public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent
     }
 
     public void resetPerks() {
-        perks.clear();
-        Gakujelly.Log("balling");
+        perks = new ArrayList<>();
+        Gakujelli.Log("balling");
         GakuComponents.PERKS.sync(this.provider);
     }
 
@@ -65,6 +66,13 @@ public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent
     public void setPoints(int value)
     {
         points = value;
+        GakuComponents.PERKS.sync(this.provider);
+    }
+
+    @Override
+    public void submitPerks(List<String> perks) {
+        Gakujelli.Log("Perks submitted");
+        this.perks = perks;
         GakuComponents.PERKS.sync(this.provider);
     }
 }

@@ -1,24 +1,20 @@
-package gakusei.gakujelly.screen;
+package gakusei.gakujelli.screen;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import gakusei.gakujelly.GakuComponents;
-import gakusei.gakujelly.Gakujelly;
-import gakusei.gakujelly.GakujellyClient;
-import gakusei.gakujelly.networking.Kakapo;
+import gakusei.gakujelli.Gakujelli;
+import gakusei.gakujelli.GakujelliClient;
+import gakusei.gakujelli.networking.Kakapo;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
-import io.wispforest.owo.ui.component.ButtonComponent;
+import net.minecraft.client.resource.language.I18n;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextContent;
 import net.minecraft.util.math.Vec2f;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
@@ -51,7 +48,7 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
-        perks = Gakujelly.Perks;
+        perks = Gakujelli.Perks;
         rootComponent
                 .surface(Surface.blur(5,5))
                 .horizontalAlignment(HorizontalAlignment.CENTER)
@@ -62,19 +59,25 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
                 Components.button(
                         Text.literal("Reset"),
                         button -> {
-                            ClientPlayNetworking.send(Kakapo.RESET_PERKS, PacketByteBufs.create());
+                            GakujelliClient.ResetPerks();
                         }
                 )
         );
         for (Perk p : perks) {
-            if (renderedPerks.contains(p)) Gakujelly.Log("wtf this shouldnt happen");
-            //positioning
             var a = (
-                    Components.button(
-                            Text.translatable("perk.gakujelly." + p.name),
+                    new PerkButton(
+                            Text.translatable("perk.gakujelli." + p.name),
                             buttonComponent -> {
-                                Gakujelly.Log(p.name);
-                            }
+                                if (!GakujelliClient.obtainedPerks.contains(p.name) && new HashSet<>(GakujelliClient.obtainedPerks).containsAll(p.prerequisites)) {
+                                    GakujelliClient.obtainedPerks.add(p.name);
+                                    Gakujelli.Log("added perk " + p.name);
+                                }
+                                else {
+                                    GakujelliClient.obtainedPerks.remove(p.name);
+                                    Gakujelli.Log("removed perk " + p.name);
+                                }
+                            },
+                            p
                     ));
             a.setTooltip(Tooltip.of(GetPerkTooltip(p)));
             /*yeah this isnt ideal BUT without this there will constantly be two instances
@@ -97,19 +100,28 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
         }
     }
 
+    @Override
+    public void close() {
+        GakujelliClient.SubmitPerks();
+        super.close();
+    }
+
     public Text GetPerkTooltip(Perk perk)
     {
-        Text description = Text.translatable("perk.tooltip.gakujelly." + perk.name);
-        Text prerequisites = Text.empty();
+        String description = I18n.translate("perk.tooltip.gakujelli." + perk.name);
+        String prerequisites = "";
+        String formatThing;
         for (String p : perk.prerequisites)
         {
-            if (prerequisites.getContent() == TextContent.EMPTY) prerequisites = Text.translatable("perk.gakujelly." + p);
+            if (obtainedPerks.contains(p)) formatThing = "§a§l";
+            else formatThing = "§c§l";
+            if (prerequisites == "") prerequisites = formatThing + I18n.translate("perk.gakujelli." + p) + "§r";
             else
             {
-                prerequisites = Text.of(prerequisites.getString() + ", " + Text.translatable("perk.gakujelly." + p));
+                prerequisites = prerequisites + ", " + formatThing + I18n.translate("perk.gakujelli." + p) + "§r";
             }
         }
-        return Text.of(description.getString() + "\nRequires: [" + prerequisites.getString() + "]");
+        return Text.of(description + "\n"+ I18n.translate("perks.gakujelli.requires") + ": [" + prerequisites + "]" + "\n" + I18n.translate("perks.gakujelli.costs") + ": " + perk.cost);
     }
 
     public Vec2f GetButtonLocation(Perk perk)
@@ -121,9 +133,9 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
         double cos = Math.cos(Math.toRadians(ringIndex * (360f / perksn)));
         double sin = Math.sin(Math.toRadians(ringIndex * (360f / perksn)));
         Vec2f v = new Vec2f(d*(float) sin,d*(float) cos);
-        Gakujelly.Log("n perks in ring: " + perksn);
-        Gakujelly.Log("index in ring: "+ ringIndex);
-        Gakujelly.Log("ButtonLoc: " + sin + ", " + cos);
+        Gakujelli.Log("n perks in ring: " + perksn);
+        Gakujelli.Log("index in ring: "+ ringIndex);
+        Gakujelli.Log("ButtonLoc: " + sin + ", " + cos);
         v = v.add(new Vec2f(width/2f, height/2f));
         return v;
     }
@@ -169,7 +181,7 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
                 Type perkArrayType = new TypeToken<Perk[]>() {}.getType();
                 return gson.fromJson(reader, perkArrayType);
             } catch (IOException e) {
-                Gakujelly.Log("Failed to load perks from resource " + e);
+                Gakujelli.Log("Failed to load perks from resource " + e);
                 return new Perk[0];
             }
         }
