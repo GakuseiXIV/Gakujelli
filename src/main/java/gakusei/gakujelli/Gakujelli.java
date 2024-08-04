@@ -1,21 +1,32 @@
 package gakusei.gakujelli;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import eu.midnightdust.lib.config.MidnightConfig;
 import gakusei.gakujelli.effect.Guts;
-import gakusei.gakujelli.mixin.BrewingRecipeRegistryMixin;
+import gakusei.gakujelli.effect.Nocturnal;
+import gakusei.gakujelli.mixin.BrewingRegistry;
 import gakusei.gakujelli.networking.Kakapo;
 import gakusei.gakujelli.screen.PerkTreeScreen;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.gamerule.v1.FabricGameRuleVisitor;
+import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +45,9 @@ public class Gakujelli implements ModInitializer {
 	public static final StatusEffect GUTS = Registry.register(Registries.STATUS_EFFECT,
 			new Identifier(ID, "guts"),
 			new Guts(StatusEffectCategory.BENEFICIAL, 13750737));
+	public static final StatusEffect NOCTURNAL = Registry.register(Registries.STATUS_EFFECT,
+			new Identifier(ID, "nocturnal"),
+			new Nocturnal(StatusEffectCategory.BENEFICIAL, 4205355));
 
 	public static final Potion GUTS_POT = Registry.register(Registries.POTION,
 			new Identifier(ID, "guts_potion"),
@@ -66,15 +80,21 @@ public class Gakujelli implements ModInitializer {
 		Kakapo.RegisterS2CPackets();
 		MidnightConfig.init(ID, ModConfig.class);
 
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(Potions.THICK, Items.RAW_GOLD, GUTS_POT);
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(GUTS_POT, Items.REDSTONE, GUTS_POT_EXT);
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(GUTS_POT, Items.GLOWSTONE_DUST, GUTS_POT_STR);
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(GUTS_POT_STR, Items.RAW_GOLD, GUTS_POT_STR2);
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+				dispatcher.register(CommandManager.literal("addPerkPoints")
+								.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+								.then(CommandManager.argument("target", EntityArgumentType.entity())
+										.then(CommandManager.argument("amount", IntegerArgumentType.integer(0))
+												.executes(context -> executeAddPointCommand(context.getSource(), EntityArgumentType.getEntity(context, "target"), IntegerArgumentType.getInteger(context, "amount"))
+										)))));
 
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(Potions.MUNDANE, Items.RAW_COPPER, VULN_POT);
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(VULN_POT, Items.REDSTONE, VULN_POT_EXT);
-		BrewingRecipeRegistryMixin.invokeRegisterPotionRecipe(VULN_POT, Items.GLOWSTONE_DUST, VULN_POT_STR);
+		RegisterPotionRecipes();
 
+		LoadPerks();
+	}
+
+	public static void LoadPerks()
+	{
 		try {
 			List<PerkTreeScreen.Perk> p = new ArrayList<>();
 			for (String s : ModConfig.perkDirectories)
@@ -86,6 +106,40 @@ public class Gakujelli implements ModInitializer {
 			Gakujelli.Log("failed to load perks");
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static int executeAddPointCommand(ServerCommandSource source, Entity target, int amount)
+	{
+		int i = 0;
+		if (target instanceof PlayerEntity)
+		{
+			target.getComponent(GakuComponents.PERKS).setPoints(target.getComponent(GakuComponents.PERKS).getPoints() + amount);
+		}
+		else
+		{
+			i = -1;
+		}
+		int finalI = i;
+		source.sendFeedback(() -> {
+			if (finalI == 0)
+			{
+				return Text.of("Gave " + amount + " perk points to " + target.getName());
+			}
+			else return Text.of("Command failed");
+		}, true);
+		return i;
+	}
+
+	public static void RegisterPotionRecipes()
+	{
+		BrewingRegistry.registerRecipe(Potions.THICK, Items.RAW_GOLD, GUTS_POT);
+		BrewingRegistry.registerRecipe(GUTS_POT, Items.REDSTONE, GUTS_POT_EXT);
+		BrewingRegistry.registerRecipe(GUTS_POT, Items.GLOWSTONE_DUST, GUTS_POT_STR);
+		BrewingRegistry.registerRecipe(GUTS_POT_STR, Items.RAW_GOLD, GUTS_POT_STR2);
+
+		BrewingRegistry.registerRecipe(Potions.MUNDANE, Items.RAW_COPPER, VULN_POT);
+		BrewingRegistry.registerRecipe(VULN_POT, Items.REDSTONE, VULN_POT_EXT);
+		BrewingRegistry.registerRecipe(VULN_POT, Items.GLOWSTONE_DUST, VULN_POT_STR);
 	}
 
 	public static void Log(String message)

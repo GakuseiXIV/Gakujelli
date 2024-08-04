@@ -16,4 +16,5 @@ public class ModConfig extends MidnightConfig {
     @Comment(category = "text") public static Comment perksDisclaimer;
     @Entry(category = "text") public static boolean enablePerks = false;
     @Entry(category = "text") public static List<String> perkDirectories = Lists.newArrayList("gakujelli");
+    @Entry(category = "text") public static boolean freePerkEditing = false;
 }

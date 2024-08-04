@@ -3,8 +3,11 @@
   "package": "gakusei.gakujelli.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "BrewingRecipeRegistryMixin",
-    "GutsMixin"
+    "BrewingRegistry",
+    "GutsMixin",
+    "NocturnalMixin",
+    "NocturnalEffectMixin",
+    "SloppyHasStatusEffectMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -6,12 +6,14 @@ import gakusei.gakujelli.Gakujelli;
 import gakusei.gakujelli.util.JFunc;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent {
-    private List<String> perks;
+    private String perks;
     private final PlayerEntity provider;
     public int points;
 
@@ -21,40 +23,43 @@ public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent
 
     @Override
     public void readFromNbt(NbtCompound tag) {
-        this.perks = JFunc.StringToArray(tag.getString("perks"));
+        this.perks = tag.getString("gakujelliperks");
+        this.points = tag.getInt("gakujellipoints");
     }
 
     @Override
     public void writeToNbt(NbtCompound tag) {
-        tag.putString("perks", JFunc.ArrayToString(perks));
+        tag.putString("gakujelliperks", perks);
+        tag.putInt("gakujellipoints", points);
     }
 
     public List<String> getPerks() {
-        return perks;
+        return JFunc.StringToArray(perks);
     }
 
     public boolean hasPerk(String perk)
     {
+        Gakujelli.Log(perks);
+        Gakujelli.Log(String.valueOf(perks.contains(perk)));
         return perks.contains(perk);
     }
 
     public int getNPerks(){
-        return perks.size();
+        return JFunc.StringToArray(perks).size();
     }
 
     public void addPerk(String perk) {
-        perks.add(perk);
+        perks = JFunc.AddToFalseArray(perks, perk);
         GakuComponents.PERKS.sync(this.provider);
     }
 
     public void removePerk(String perk) {
-        perks.remove(perk);
+        perks = JFunc.RemoveFromFalseArray(perks, perk);
         GakuComponents.PERKS.sync(this.provider);
     }
 
     public void resetPerks() {
-        perks = new ArrayList<>();
-        Gakujelli.Log("balling");
+        perks = "";
         GakuComponents.PERKS.sync(this.provider);
     }
 
@@ -72,7 +77,19 @@ public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent
     @Override
     public void submitPerks(List<String> perks) {
         Gakujelli.Log("Perks submitted");
-        this.perks = perks;
-        GakuComponents.PERKS.sync(this.provider);
+        this.perks = JFunc.ArrayToString(perks);
+        GakuComponents.PERKS.sync(this.provider, (this));
+    }
+
+    @Override
+    public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient) {
+        buf.writeString(perks);
+        buf.writeInt(points);
+    }
+
+    @Override
+    public void applySyncPacket(PacketByteBuf buf) {
+        this.perks = buf.readString();
+        this.points = buf.readInt();
     }
 }

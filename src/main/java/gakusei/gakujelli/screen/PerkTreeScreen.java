@@ -4,15 +4,13 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import gakusei.gakujelli.Gakujelli;
 import gakusei.gakujelli.GakujelliClient;
-import gakusei.gakujelli.networking.Kakapo;
+import gakusei.gakujelli.ModConfig;
 import io.wispforest.owo.ui.base.BaseOwoScreen;
 import net.minecraft.client.resource.language.I18n;
 import io.wispforest.owo.ui.component.Components;
 import io.wispforest.owo.ui.container.Containers;
 import io.wispforest.owo.ui.container.FlowLayout;
 import io.wispforest.owo.ui.core.*;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec2f;
@@ -48,6 +46,7 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
 
     @Override
     protected void build(FlowLayout rootComponent) {
+        GakujelliClient.OpenPerkMenu();
         perks = Gakujelli.Perks;
         rootComponent
                 .surface(Surface.blur(5,5))
@@ -55,26 +54,34 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
                 .verticalAlignment(VerticalAlignment.CENTER);
 
         //reset
-        var reset = rootComponent.child(
-                Components.button(
-                        Text.literal("Reset"),
-                        button -> {
-                            GakujelliClient.ResetPerks();
-                        }
-                )
-        );
+        if (ModConfig.freePerkEditing == true)
+        {
+            var reset = rootComponent.child(
+                    Components.button(
+                            Text.literal("Reset"),
+                            button -> {
+                                GakujelliClient.ResetPerks();
+                            }
+                    )
+            );
+        }
+
+        var points = new PerkPointsDisplay(Text.of("§l"+
+                I18n.translate("perks.gakujelli.points")));
+        points.shadow(true);
+        points.positioning().set(Positioning.relative(50,80));
+        rootComponent.child(points);
+
         for (Perk p : perks) {
             var a = (
                     new PerkButton(
-                            Text.translatable("perk.gakujelli." + p.name),
+                            I18n.translate("perk.gakujelli." + p.name),
                             buttonComponent -> {
                                 if (!GakujelliClient.obtainedPerks.contains(p.name) && new HashSet<>(GakujelliClient.obtainedPerks).containsAll(p.prerequisites)) {
-                                    GakujelliClient.obtainedPerks.add(p.name);
-                                    Gakujelli.Log("added perk " + p.name);
+                                    GakujelliClient.AddPerk(p);
                                 }
-                                else {
-                                    GakujelliClient.obtainedPerks.remove(p.name);
-                                    Gakujelli.Log("removed perk " + p.name);
+                                else if (GakujelliClient.obtainedPerks.contains(p.name)){
+                                    GakujelliClient.RemovePerk(p);
                                 }
                             },
                             p
@@ -170,6 +177,10 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
             this.ring = ring;
             this.prerequisites = prerequisites;
             this.cost = cost;
+        }
+        public Perk empty()
+        {
+            return new Perk("", 0, new ArrayList<>(), 0);
         }
         public static Perk[] loadPerksFromFile(String filePath) throws IOException {
             Gson gson = new GsonBuilder().create();

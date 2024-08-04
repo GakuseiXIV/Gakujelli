@@ -23,4 +23,18 @@ public class JFunc
         }
         return f;
     }
+
+    public static String RemoveFromFalseArray(String falseArray, String remove)
+    {
+        var e = StringToArray(falseArray);
+        e.remove(remove);
+        return JFunc.ArrayToString(e);
+    }
+
+    public static String AddToFalseArray(String falseArray, String add)
+    {
+        var e = StringToArray(falseArray);
+        e.add(add);
+        return JFunc.ArrayToString(e);
+    }
 }

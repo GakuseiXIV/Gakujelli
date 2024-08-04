@@ -11,8 +11,16 @@ import java.util.function.Consumer;
 
 public class PerkButton extends ButtonComponent {
     public PerkTreeScreen.Perk perk;
-    public PerkButton(Text message, Consumer<ButtonComponent> onPress, PerkTreeScreen.Perk perk) {
-        super(message, onPress);
+
+    @Override
+    public Text getMessage() {
+        String prefix = "§c";
+        if (GakujelliClient.obtainedPerks.contains(perk.name)) prefix = "§a";
+        return Text.of(prefix + super.getMessage().getString());
+    }
+
+    public PerkButton(String message, Consumer<ButtonComponent> onPress, PerkTreeScreen.Perk perk) {
+        super(Text.of(message), onPress);
         this.perk = perk;
     }
 

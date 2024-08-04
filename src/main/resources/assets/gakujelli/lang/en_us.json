@@ -9,6 +9,8 @@
   "item.minecraft.splash_potion.effect.vuln_potion": "Splash Potion of Vulnerability",
   "item.minecraft.lingering_potion.effect.vuln_potion": "Lingering Potion of Vulnerability",
 
+  "effect.gakujelli.nocturnal": "Nocturnal",
+
   "gakujelli.midnightconfig.title":"gakujelli!",
   "gakujelli.midnightconfig.gutsSec": "Guts",
   "gakujelli.midnightconfig.enableGuts" : "Enable Guts",
@@ -16,15 +18,18 @@
   "gakujelli.midnightconfig.defaultMobGuts" : "Default Mob Guts Ranking",
   "gakujelli.midnightconfig.minimumDamage" : "Minimum Damage",
   "gakujelli.midnightconfig.perksSec": "Perks",
-  "gakujelli.midnightconfig.perksDisclaimer": "Perks do not work right now. They do not do anything yet. Leaving them disabled is for the better.",
-  "gakujelli.midnightconfig.enablePerks": "Enable Perks (not recommended)",
+  "gakujelli.midnightconfig.perksDisclaimer": "glup glup.",
+  "gakujelli.midnightconfig.enablePerks": "Enable Perks",
   "gakujelli.midnightconfig.perkDirectories": "Perk directories",
+  "gakujelli.midnightconfig.freePerkEditing": "Free Perk editing",
 
   "key.gakujelli.open_perk_tree": "Open Perk Tree",
   "category.gakujelli.gakujelli.": "gakujelli",
 
   "perks.gakujelli.requires": "Requires",
   "perks.gakujelli.costs": "Costs",
+  "perks.gakujelli.points": "Perk Points",
+  "perks.gakujelli.not_enough_points": "Not enough points",
 
   "perk.gakujelli.tank": "Tank",
   "perk.tooltip.gakujelli.tank": "Increases Guts by 1.",
@@ -37,5 +42,5 @@
   "perk.gakujelli.griffin": "Griffin",
   "perk.tooltip.gakujelli.griffin": "Exists",
   "perk.gakujelli.venture": "Venture",
-  "perk.tooltip.gakujelli.venture": "Exists"
+  "perk.tooltip.gakujelli.venture": "Eating fills 20% more hunger"
 }
