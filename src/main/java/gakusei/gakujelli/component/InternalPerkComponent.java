@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InternalPerkComponent implements PerkComponent, AutoSyncedComponent {
-    private String perks;
+    private String perks = "";
     private final PlayerEntity provider;
-    public int points;
+    public int points = 0;
 
     public InternalPerkComponent(PlayerEntity provider) {
         this.provider = provider;
