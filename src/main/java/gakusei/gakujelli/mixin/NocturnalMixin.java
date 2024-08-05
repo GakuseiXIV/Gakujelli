@@ -24,7 +24,7 @@ public class NocturnalMixin extends LivingEntity {
     public void Nocturnal(CallbackInfo ci)
     {
         if (!getWorld().isClient() && getComponent(GakuComponents.PERKS).hasPerk("nocturnal") && getWorld().isNight()) {
-            addStatusEffect(new StatusEffectInstance(Gakujelli.NOCTURNAL, 100));
+            addStatusEffect(new StatusEffectInstance(Gakujelli.NOCTURNAL, 119));
         }
     }
 

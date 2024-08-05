@@ -12,15 +12,16 @@
   "effect.gakujelli.nocturnal": "Nocturnal",
 
   "gakujelli.midnightconfig.title":"gakujelli!",
+  "gakujelli.midnightconfig.serverSide": "Server-side",
   "gakujelli.midnightconfig.gutsSec": "Guts",
   "gakujelli.midnightconfig.enableGuts" : "Enable Guts",
   "gakujelli.midnightconfig.defaultPlayerGuts" : "Default Player Guts Ranking",
   "gakujelli.midnightconfig.defaultMobGuts" : "Default Mob Guts Ranking",
   "gakujelli.midnightconfig.minimumDamage" : "Minimum Damage",
   "gakujelli.midnightconfig.perksSec": "Perks",
-  "gakujelli.midnightconfig.perksDisclaimer": "glup glup.",
   "gakujelli.midnightconfig.enablePerks": "Enable Perks",
   "gakujelli.midnightconfig.perkDirectories": "Perk directories",
+  "gakujelli.midnightconfig.perksDisclaimer": "Perk directories must line up with the server's, otherwise they will not work!",
   "gakujelli.midnightconfig.freePerkEditing": "Free Perk editing",
 
   "key.gakujelli.open_perk_tree": "Open Perk Tree",
@@ -31,16 +32,6 @@
   "perks.gakujelli.points": "Perk Points",
   "perks.gakujelli.not_enough_points": "Not enough points",
 
-  "perk.gakujelli.tank": "Tank",
-  "perk.tooltip.gakujelli.tank": "Increases Guts by 1.",
-  "perk.gakujelli.archer": "Archer",
-  "perk.tooltip.gakujelli.archer": "Increases bow draw speed.",
-  "perk.gakujelli.swordsman": "Swordsman",
-  "perk.tooltip.gakujelli.swordsman": "Increases sword swing speed.",
   "perk.gakujelli.nocturnal": "Nocturnal",
-  "perk.tooltip.gakujelli.nocturnal": "Grants Night Vision at night time",
-  "perk.gakujelli.griffin": "Griffin",
-  "perk.tooltip.gakujelli.griffin": "Exists",
-  "perk.gakujelli.venture": "Venture",
-  "perk.tooltip.gakujelli.venture": "Eating fills 20% more hunger"
+  "perk.tooltip.gakujelli.nocturnal": "Grants the Nocturnal effect at night."
 }

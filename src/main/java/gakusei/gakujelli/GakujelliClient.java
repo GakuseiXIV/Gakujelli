@@ -1,5 +1,6 @@
 package gakusei.gakujelli;
 
+import eu.midnightdust.lib.config.MidnightConfig;
 import gakusei.gakujelli.networking.Kakapo;
 import gakusei.gakujelli.networking.packets.SubmitPerksPacket;
 import gakusei.gakujelli.networking.packets.SyncPerksPacket;
@@ -26,7 +27,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,16 +43,38 @@ public class GakujelliClient implements ClientModInitializer {
 
     public static PerkTreeScreen.Perk[] PERKS;
 
+    public static boolean perksEnabled = false;
+    public static boolean fpe = false;
+    public static List<String> directories = new ArrayList<>();
+
     @Override
     public void onInitializeClient() {
         Kakapo.RegisterC2SPackets();
-        PERKS = Gakujelli.GetPerks();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            while (OPEN_PERKS_TREE_KEYBIND.wasPressed() && ModConfig.enablePerks)
+            while (OPEN_PERKS_TREE_KEYBIND.wasPressed())
             {
-                client.setScreen(new PerkTreeScreen());
+                OpenPerkMenu();
+                if (perksEnabled) client.setScreen(new PerkTreeScreen());
             }
         });
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            ClientPlayNetworking.send(Kakapo.GET_SERVER_CONFIG, PacketByteBufs.empty());
+        });
+    }
+
+    public static PerkTreeScreen.Perk[] LoadPerks()
+    {
+        try {
+            List<PerkTreeScreen.Perk> p = new ArrayList<>();
+            for (String s : directories)
+            {
+                p.addAll(Arrays.stream(PerkTreeScreen.Perk.loadPerksFromFile("/data/" + s + "/perks.json")).toList());
+            }
+            return p.toArray(PerkTreeScreen.Perk[]::new);
+        } catch (IOException e) {
+            Gakujelli.Log("failed to load perks");
+            throw new RuntimeException(e);
+        }
     }
 
     public static void OpenPerkMenu() {
@@ -107,7 +132,7 @@ public class GakujelliClient implements ClientModInitializer {
 
     public static void RemovePerk(@NotNull PerkTreeScreen.Perk perk)
     {
-        if (ModConfig.freePerkEditing)
+        if (fpe)
         {
             Gakujelli.Log(JFunc.ArrayToString(obtainedPerks));
             Gakujelli.Log(perk.name);
@@ -125,7 +150,7 @@ public class GakujelliClient implements ClientModInitializer {
 
     public static void RemovePerk(@NotNull PerkTreeScreen.Perk perk, boolean byPassFPE)
     {
-        if (ModConfig.freePerkEditing || byPassFPE)
+        if (fpe || byPassFPE)
         {
             Gakujelli.Log(JFunc.ArrayToString(obtainedPerks));
             Gakujelli.Log(perk.name);
@@ -143,7 +168,12 @@ public class GakujelliClient implements ClientModInitializer {
 
     public static PerkTreeScreen.Perk GetPerkFromString(String perk)
     {
-        for (PerkTreeScreen.Perk p: PERKS)
+        for (PerkTreeScreen.Perk p : PERKS)
+        {
+            if (p.name == perk) return p;
+        }
+        // fallback
+        for (PerkTreeScreen.Perk p : Gakujelli.Perks)
         {
             if (p.name == perk) return p;
         }
@@ -175,6 +205,15 @@ public class GakujelliClient implements ClientModInitializer {
         obtainedPerks = JFunc.StringToArray(buf.readString());
         perkPoints = buf.readInt();
         Gakujelli.Log(JFunc.ArrayToString(obtainedPerks) + " | " + perkPoints);
+    }
+
+    public static void receiveModConfig(MinecraftClient client, ClientPlayNetworkHandler handler,
+                                       PacketByteBuf buf, PacketSender responseSender)
+    {
+        perksEnabled = buf.readBoolean();
+        fpe = buf.readBoolean();
+        directories = JFunc.StringToArray(buf.readString());
+        PERKS = LoadPerks();
     }
 
     public static void SyncPerkData()

@@ -1,14 +1,17 @@
 package gakusei.gakujelli.mixin;
 
+import gakusei.gakujelli.GakuComponents;
 import gakusei.gakujelli.Gakujelli;
 import gakusei.gakujelli.ModConfig;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
@@ -23,6 +26,8 @@ public abstract class GutsMixin {
 	@Shadow public abstract boolean hasStatusEffect(StatusEffect effect);
 
 	@Shadow public abstract Vec3d applyMovementInput(Vec3d movementInput, float slipperiness);
+
+	@Shadow public abstract void enterCombat();
 
 	@ModifyVariable(method = "damage", at = @At("HEAD"), ordinal = 0, argsOnly = true)
 	private float GutsifyDamage(float amount) {
@@ -45,6 +50,7 @@ public abstract class GutsMixin {
 		return f;
 	}
 
+	@Unique
 	public int GetGutsRating(LivingEntity entity)
 	{
 		int f = 0;
@@ -59,6 +65,7 @@ public abstract class GutsMixin {
 		return f;
 	}
 
+	@Unique
 	private float addVulnerabilityDamage(float amount, LivingEntity entity)
 	{
 		float a = 0;
