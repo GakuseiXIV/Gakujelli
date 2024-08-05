@@ -5,14 +5,17 @@ import eu.midnightdust.lib.config.MidnightConfig;
 import gakusei.gakujelli.effect.Guts;
 import gakusei.gakujelli.effect.Nocturnal;
 import gakusei.gakujelli.mixin.BrewingRegistry;
+import gakusei.gakujelli.mixin.GutsMixin;
 import gakusei.gakujelli.networking.Kakapo;
 import gakusei.gakujelli.screen.PerkTreeScreen;
+import gakusei.gakujelli.util.GutsRater;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.gamerule.v1.FabricGameRuleVisitor;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -81,12 +84,17 @@ public class Gakujelli implements ModInitializer {
 		MidnightConfig.init(ID, ModConfig.class);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-				dispatcher.register(CommandManager.literal("addPerkPoints")
-								.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-								.then(CommandManager.argument("target", EntityArgumentType.entity())
-										.then(CommandManager.argument("amount", IntegerArgumentType.integer(0))
-												.executes(context -> executeAddPointCommand(context.getSource(), EntityArgumentType.getEntity(context, "target"), IntegerArgumentType.getInteger(context, "amount"))
-										)))));
+				dispatcher.register(CommandManager.literal("addperkpoints")
+						.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+						.then(CommandManager.argument("target", EntityArgumentType.entity())
+								.then(CommandManager.argument("amount", IntegerArgumentType.integer(0))
+										.executes(context -> executeAddPointCommand(context.getSource(), EntityArgumentType.getEntity(context, "target"), IntegerArgumentType.getInteger(context, "amount"))
+								)))));
+		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) ->
+				dispatcher.register(CommandManager.literal("getgutsscore")
+						.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(1))
+						.then(CommandManager.argument("target", EntityArgumentType.entity())
+								.executes(context -> getGutsCommand(context.getSource(), EntityArgumentType.getEntity(context, "target")))))));
 
 		RegisterPotionRecipes();
 
@@ -108,6 +116,16 @@ public class Gakujelli implements ModInitializer {
 		}
 	}
 
+	public static int getGutsCommand(ServerCommandSource source, Entity target)
+	{
+		int i = -1;
+		if (target instanceof LivingEntity) i = 0;
+		source.sendFeedback(() -> {
+			return Text.of("Guts score for " + target.getName().getString() + " is " + GutsRater.GetGutsRating((LivingEntity) target));
+		}, false);
+		return i;
+	}
+
 	public static int executeAddPointCommand(ServerCommandSource source, Entity target, int amount)
 	{
 		int i = 0;
@@ -123,7 +141,7 @@ public class Gakujelli implements ModInitializer {
 		source.sendFeedback(() -> {
 			if (finalI == 0)
 			{
-				return Text.of("Gave " + amount + " perk points to " + target.getName());
+				return Text.of("Gave " + amount + " perk points to " + target.getName().getString());
 			}
 			else return Text.of("Command failed");
 		}, true);

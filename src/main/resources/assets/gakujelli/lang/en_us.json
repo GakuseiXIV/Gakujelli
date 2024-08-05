@@ -33,5 +33,7 @@
   "perks.gakujelli.not_enough_points": "Not enough points",
 
   "perk.gakujelli.nocturnal": "Nocturnal",
-  "perk.tooltip.gakujelli.nocturnal": "Grants the Nocturnal effect at night."
+  "perk.tooltip.gakujelli.nocturnal": "Grants the Nocturnal effect at night.",
+  "perk.gakujelli.tank": "Tank",
+  "perk.tooltip.gakujelli.tank": "Raises your natural Guts score by 1."
 }

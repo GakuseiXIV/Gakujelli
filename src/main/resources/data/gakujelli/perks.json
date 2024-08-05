@@ -4,5 +4,11 @@
     "ring": 1,
     "prerequisites": [],
     "cost": 1
+  },
+  {
+    "name": "tank",
+    "ring": 1,
+    "prerequisites": [],
+    "cost": 1
   }
 ]

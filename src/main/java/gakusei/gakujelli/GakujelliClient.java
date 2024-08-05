@@ -1,28 +1,19 @@
 package gakusei.gakujelli;
 
-import eu.midnightdust.lib.config.MidnightConfig;
 import gakusei.gakujelli.networking.Kakapo;
-import gakusei.gakujelli.networking.packets.SubmitPerksPacket;
-import gakusei.gakujelli.networking.packets.SyncPerksPacket;
 import gakusei.gakujelli.screen.PerkTreeScreen;
 import gakusei.gakujelli.util.JFunc;
-import io.wispforest.owo.config.annotation.Sync;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.realms.Request;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +22,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class GakujelliClient implements ClientModInitializer {
 
@@ -113,11 +103,11 @@ public class GakujelliClient implements ClientModInitializer {
         SyncPerkData();
     }
 
-    public static void ResetPerks()
+    public static void ResetPerks(PerkTreeScreen.Perk[] perks)
     {
         for (String s : obtainedPerks)
         {
-            PerkTreeScreen.Perk p = GetPerkFromString(s);
+            PerkTreeScreen.Perk p = GetPerkFromString(s, perks);
             if (p != null)
             {
                 perkPoints += p.cost;
@@ -166,14 +156,9 @@ public class GakujelliClient implements ClientModInitializer {
         }
     }
 
-    public static PerkTreeScreen.Perk GetPerkFromString(String perk)
+    public static PerkTreeScreen.Perk GetPerkFromString(String perk, PerkTreeScreen.Perk[] perks)
     {
-        for (PerkTreeScreen.Perk p : PERKS)
-        {
-            if (p.name == perk) return p;
-        }
-        // fallback
-        for (PerkTreeScreen.Perk p : Gakujelli.Perks)
+        for (PerkTreeScreen.Perk p : perks)
         {
             if (p.name == perk) return p;
         }

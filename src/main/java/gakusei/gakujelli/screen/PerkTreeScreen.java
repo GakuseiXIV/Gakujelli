@@ -60,7 +60,7 @@ public class PerkTreeScreen extends BaseOwoScreen<FlowLayout> {
                     Components.button(
                             Text.literal("Reset"),
                             button -> {
-                                GakujelliClient.ResetPerks();
+                                GakujelliClient.ResetPerks(perks);
                             }
                     )
             );

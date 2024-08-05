@@ -3,6 +3,7 @@ package gakusei.gakujelli.mixin;
 import gakusei.gakujelli.GakuComponents;
 import gakusei.gakujelli.Gakujelli;
 import gakusei.gakujelli.ModConfig;
+import gakusei.gakujelli.util.GutsRater;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -33,7 +34,7 @@ public abstract class GutsMixin {
 	private float GutsifyDamage(float amount) {
 		if (!ModConfig.enableGuts) return amount;
 		boolean altered = true;
-		int gutsRating = GetGutsRating((LivingEntity)(Object)this);
+		int gutsRating = GutsRater.GetGutsRating((LivingEntity)(Object)this);
 		float f = amount;
 		if (this.getHealth() / this.getMaxHealth() <= 0.1f) f*=0.56f-(gutsRating/33f);
 		else if (this.getHealth() / this.getMaxHealth() <= 0.2f) f*=0.66f-(gutsRating/33f);
@@ -47,21 +48,6 @@ public abstract class GutsMixin {
 		Gakujelli.LOGGER.info("damage dealt should be "+f);
 
 		f = addVulnerabilityDamage(f, (LivingEntity) (Object) this);
-		return f;
-	}
-
-	@Unique
-	public int GetGutsRating(LivingEntity entity)
-	{
-		int f = 0;
-		if (entity.getType() == EntityType.PLAYER) f = ModConfig.defaultPlayerGuts;
-		if (entity instanceof MobEntity) f = ModConfig.defaultMobGuts;
-		if (entity.getMaxHealth()>=100f) f= Math.round(f+(entity.getMaxHealth()/100f));
-
-		if (entity.hasStatusEffect(Gakujelli.GUTS)) f += Objects.requireNonNull(entity.getStatusEffect(Gakujelli.GUTS)).getAmplifier()+1;
-
-		f = Math.min(5, f);
-		f = Math.max(0, f);
 		return f;
 	}
 
